@@ -4,22 +4,43 @@ import java.sql.SQLException;
 import java.util.List;
 
 import jdbc_study.dao.DepartmentDao;
+import jdbc_study.dao.EmployeeDao;
 import jdbc_study.dto.Department;
+import jdbc_study.dto.Employee;
 
 public class TestMain {
 
 	public static void main(String[] args) throws SQLException {
-	/*	DBCon dbCon = DBCon.getInstance(); //프로젝트가 끝날때까지 하나의 객체만 생성한다. 
-		System.out.println(dbCon);
-		System.out.println(dbCon.getConn());
-		//dbCon.connClose();
+
+		//testDepartmentDao();
+	
+		EmployeeDao eao = EmployeeDao.getInstance();
+		showEmployeeList(eao);
 		
-		DBCon dbCon1 = DBCon.getInstance(); //동일한 주소를 갖는다. 하나의 객체만 생성되므로
-		System.out.println(dbCon1);
-		System.out.println(dbCon1.getConn()); //close를 해서 null값이 나오는것임
+		Employee emp = new Employee(2017,"배수지","이사",4377,4500000,2);
+		eao.insertEmployee(emp);
+		showEmployeeList(eao);
 		
-		dbCon.connClose();*/
+		emp.setSalary(4000000);
+		eao.updateEmployee(emp);
+		showEmployeeList(eao);
 		
+		eao.deleteEmployee(emp);
+		showEmployeeList(eao);
+		
+		Employee searchemp=eao.selectEmployeeNo(new Employee(1003));
+		System.out.println("찾은 결과" + searchemp);
+	}
+
+	private static void showEmployeeList(EmployeeDao eao) {
+		System.out.println("=========================================================");
+		List<Employee> lists = eao.selectEmployeeAll();
+		for(Employee emp :lists){
+			System.out.println(emp);
+		}
+	}
+
+	private static void testDepartmentDao() throws SQLException {
 		//select
 		DepartmentDao dao = DepartmentDao.getInstance();
 		showDepartmentList(dao);
@@ -43,7 +64,6 @@ public class TestMain {
 		//select where
 		Department searchDept=dao.selectDepartmentByNo(new Department(1));
 		System.out.println("찾은 결과" + searchDept);
-	
 	}
 
 	private static void showDepartmentList(DepartmentDao dao) throws SQLException{
